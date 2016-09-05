@@ -18,7 +18,8 @@ RECONHECIMENTO
 
 Este documento será revisto assim que for detectado alterações.
 
-RELAÇÃO DE EQUIPAMENTOS - 1° AQUISIÇÃO
+# RELAÇÃO DE EQUIPAMENTOS 
+1° AQUISIÇÃO
 - 1 kit chassi plataforma para robô 2wd
 - 3 módulo sensor reflexao infravermelho
 - 3 módulo sensor ultrassonico hcsr04
