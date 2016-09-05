@@ -1,4 +1,4 @@
-# ENTREGADOR
+# PAPALÉGUAS
 Este repositório será utilizado para armazenamento e acompanhamento do desenvolvimento de projeto.
 
 # OBJETIVO
