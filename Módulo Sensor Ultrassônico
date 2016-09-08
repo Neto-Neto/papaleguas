@@ -57,13 +57,13 @@ int main()
               clr_bit(PORTD,LED1); // limpa o bit da variavel LED1
               clr_bit(PORTD,LED3); // limpa o bit da variavel LED3
               set_bit(PORTD,LED2); // incrementa o bit da variavel LED2
-      }
+            }
       else
         clr_bit(PORTD,LED1); // limpa o bit da variavel LED1
         clr_bit(PORTD,LED2); // limpa o bit da variavel LED2
         set_bit(PORTD,LED3); // incrementa o bit da variavel LED3
       
       _delay_ms(50); // tempo minimo para uma nova medida de distancia
-   }
+    }
   }
 }
