@@ -1,24 +1,22 @@
-// Teste do Ultrasonico 
-//------------------------------------------------------
+#define F_CPU 16000000UL // define frequencia do microcontrolador em 16MHz
+
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h> // para gravação de dados em memoria flash
 #include <avr/interrupt.h> // para interrupção
 
-#define F_CPU 16000000UL // define frequencia do microcontrolador em 16MHz
-
 // macros para trabalho com bit
-#define set_bit (Y,bit_x) (Y|=(1<<bit_x))
-#define clr_bit (Y,bit_x) (Y&=~(1<<bit_x))
-#define tst_bit (Y,bit_x) (Y&(1<<bit_x))
-#define cpl_bit (Y,bit_x) (Y^=(1<<bit_x))
+#define set_bit(Y,bit_x)(Y|=(1<<bit_x))
+#define clr_bit(Y,bit_x)(Y&=~(1<<bit_x))
+#define tst_bit(Y,bit_x)(Y&(1<<bit_x))
+#define cpl_bit(Y,bit_x)(Y^=(1<<bit_x))
 
 #define DISPARO PB1  //definição de "variavel" DISPARO = Porta B 1
 #define LED1 PD1
 #define LED2 PD2
 #define LED3 PD3
 
-unsigned int Inicio_Sinal, Distancia;
+unsigned int Inicio_Sinal, DISTANCIA;
 //----------------------------------------------------------------------------------------
 ISR(Timer1_CAPT_vect)
 {
@@ -27,7 +25,7 @@ ISR(Timer1_CAPT_vect)
     if (!tst_bit(TCCR1B,ICES1)) //Lê o valor de contagem do TC1 na borda de subida de sinal
         Inicio_Sinal = ICR1; //salva a primeira contaem para determinar a largura do pulso
     else
-        Distancia = (ICR1 - Inicio_Sinal)/58; //ICR1 é a descida de sinal (sinal recebido) - incio do sinal(sinal enviado) / 58 => distancia
+        DISTANCIA = (ICR1 - Inicio_Sinal)/58; //ICR1 é a descida de sinal (sinal recebido) - incio do sinal(sinal enviado) / 58 => distancia
 }
 //----------------------------------------------------------------------------------------
 
@@ -39,7 +37,7 @@ int main()
     PORTB = 0b11111101;
 
     TCCR1B = (1<<ICES1)|(1<<CS11);
-    TIMSK = 1<<ICIE1;
+    TIMSK1 = 1<<ICIE1;
     sei();
 
    while(1)
@@ -48,15 +46,14 @@ int main()
       _delay_us(10);//largura do pulso digital para iniciar o sensor vide pag. 239
       clr_bit(PORTB,DISPARO);//desativa o pulso digital
 
-      if(Distancia<431) // se o pulso recebido for menor que 25ms
-      {  
-
-            if(DISTANCIA <100) //se distancia do pulso for menor que 1m
+      if(DISTANCIA<431) // se o pulso recebido for menor que 25ms
+      {
+            if(DISTANCIA<100){ //se distancia do pulso for menor que 1m
               clr_bit(PORTD,LED2); // limpa o bit da variavel LED2
               clr_bit(PORTD,LED3); // limpa o bit da variavel LED3
               set_bit(PORTD,LED1); // incrementa o bit da variavel LED1
-
-            if(DISTANCIA >100 && <200) //se distancia estiver entre 1 e 2m
+            }
+            if(100<DISTANCIA<200){ //se distancia estiver entre 1 e 2m
               clr_bit(PORTD,LED1); // limpa o bit da variavel LED1
               clr_bit(PORTD,LED3); // limpa o bit da variavel LED3
               set_bit(PORTD,LED2); // incrementa o bit da variavel LED2
@@ -65,7 +62,8 @@ int main()
         clr_bit(PORTD,LED1); // limpa o bit da variavel LED1
         clr_bit(PORTD,LED2); // limpa o bit da variavel LED2
         set_bit(PORTD,LED3); // incrementa o bit da variavel LED3
-
+      
       _delay_ms(50); // tempo minimo para uma nova medida de distancia
    }
+  }
 }
